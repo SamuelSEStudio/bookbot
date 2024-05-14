@@ -4,9 +4,12 @@ def main():
     word_count = count_words(text)
     letter_count = count_letters(text)
     letter_count_alpha = is_alphabetic(letter_count)
-    letter_count_.sort(reverse=True, key = sort_on)
-    print(f"{word_count} words found in the {book_path}")
-    print(f"{letter_count_dict}")
+    report = convert_and_sort(letter_count_alpha)
+    print(f"--- Begin report of {book_path} ---")
+    print(f"{word_count} words found in the document")
+    for l in report:
+        print(f"The character '{l['char']}' was found '{l['count']}' times")
+    print("--- End report ---")
         
 def count_words(text):
     words = text.split()
@@ -21,11 +24,19 @@ def count_letters(text):
             letter_dict[character] += 1
     return letter_dict
 
-def is_alphabetic(letter_count):
-    return {"char": char, "count": count} for char, count in letter_count.items() if char,isalpha()
+def is_alphabetic(lc):
+    #filters out non-alphabetic characters from dictionary
+    return {char: count for char, count in lc.items() if char.isalpha()}
 
-def sort_on(letter_count):
-    return letter_count["count"]
+def convert_and_sort(lca):
+    #converts dict to a list of dictionaries then sorts it by count high to low
+    list_of_lets = [{"char": char, "count" : count} for char, count in lca.items()]
+    list_of_lets.sort(reverse=True, key = sort_on)
+    return list_of_lets
+
+def sort_on(lc):
+    #return the count value for sorting
+    return lc["count"]
 
 def get_book_text(path):
     with open(path) as f:
